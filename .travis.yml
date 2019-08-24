@@ -1,0 +1,39 @@
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+    - downloads
+env:
+  global:
+    - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+    - BINARYBUILDER_AUTOMATIC_APPLE=false
+sudo: required
+
+# Before anything else, get the latest versions of things
+before_script:
+  - julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+
+script:
+  - julia build_tarballs.jl
+
+
+deploy:
+    provider: releases
+    api_key:
+        # Note; this api_key is only valid for giordano/PangoBuilder; you need
+        # to make your own: https://docs.travis-ci.com/user/deployment/releases/
+        secure: d9epi4FIDhLfaUDnbzihvuCSbwoU2OE4D4JPilslA5M9hCTzO7UIP143EJvNZ+cVIsUtHiOXQELhdx+5b+jOOgq6n8W/av00Xzy7vkwHIK53NcnQs2XuPWTm/YzOsaQtRdY92szriEBMEx1hV50bMvRfpd++3d9jskOdUjTCp/FOM54rmI2c2jOzVi+cvT/hFgfv9IAIg/1dPavZmZ86xYfrWgqqQWEbgsiFKL1rTWkoklKz0KPM28zm7oel0lUn/VMyd1WctUgLIdLSKEfDezskhKpa/bNyAD+5QkOakqjMKCWPSxKJ+NlLxeXmuTkmIwvBB9PnsjQ28Rz7gsimBjbcHM7KZQxHRsjvktvZ50DFAtv2ybVME12xV+L6PXjNRFEzG6fAeasuUjpu+uYVLyqh4xtBU2slxLfjmclQVocsBZmRwEILk3eE4i0bKPAuZBPUTpnaHycz4BSAhyb9CU6G4TQeopqxDhguFzZn09gIAirGYP+81yppw2LuH5166Uc6FNJw1U6+RjbDj+4OLok7beqhc673HMyQsLaRSf7nGpFgC8jppes6NA7jDrSMaShM2HiLsYYwaMTU5OCgiM9LrF7szlezZm/AXwfJulmR3dgbGWewj/qGTL3Bp83OOzUVNUBNJo1MKf5ALvVsDIX5go71i8w9tQ/22pk0uN8=
+    file_glob: true
+    file: products/*
+    skip_cleanup: true
+    on:
+        repo: giordano/PangoBuilder
+        tags: true
