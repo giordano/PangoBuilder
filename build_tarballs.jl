@@ -17,7 +17,6 @@ sources = [
 script = raw"""
 cd $WORKSPACE/srcdir/pango-*/
 MESON="$(readlink -f ../meson-0.*/meson.py)"
-sed -i 's/true/false/g' meson_options.txt
 mkdir build
 cd build
 
@@ -47,7 +46,7 @@ libdir = 'lib'
 bindir = 'bin'
 EOF
 
-$MESON .. --cross-file cross_compile.txt
+$MESON .. -Dintrospection=false --cross-file cross_compile.txt
 """
 
 # These are the platforms we will build for by default, unless further
@@ -63,9 +62,8 @@ products(prefix) = [
 
 # Dependencies that must be installed before this package can be built
 dependencies = [
-    
+    "https://github.com/staticfloat/GlibBuilder/releases/download/v2.54.2-2/build.jl"
 ]
 
 # Build the tarballs, and possibly a `build.jl` as well.
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)
-
