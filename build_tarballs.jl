@@ -20,7 +20,7 @@ MESON="$(readlink -f ../meson-0.*/meson.py)"
 mkdir build
 cd build
 
-cat << EOF > cross_compile.txt
+cat > cross_compile.txt << EOF
 [binaries]
 c = '${CC}'
 cpp = '${CXX}'
